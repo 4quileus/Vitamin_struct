@@ -649,7 +649,7 @@ def display_MCMAS():
     st.write(f"    ")
     st.write(f"    ")
     st.markdown('Logic Selection ')
-    Logic=st.selectbox('Select your logic',['ATL','CTL','LTL','SL','CapATL', 'OL', 'OATL', 'RBATL', 'RABATL'])
+    Logic=st.selectbox('Select your logic',['LOGIC1', 'LOGIC2', '...'])
     st.write(f"    ")
     st.write(f"    ")
     formula=st.text_input('Write your formula',' ')
@@ -697,9 +697,10 @@ def display_MS(page):
     elif st.session_state.cmpt_model==5:
       D_logic()
     elif st.session_state.cmpt_model==6:
-      from verification.ATL import ATL
-      result = ATL.model_checking(st.session_state.info_model[5][1], 'data/tmp.txt')
-      del ATL
+      result = {}
+      result['res'] = None
+      result['initial_state'] = None
+      # call the verification component passing the model and formula
       st.write(result['res'])
       st.write(result['initial_state'])
       
@@ -713,7 +714,7 @@ def display_MS(page):
   elif page==4:
     filename = upload_file_handler()
     st.markdown('Logic Selection ')
-    Logic=st.selectbox('Select your logic',['ATL','ATLF','CTL','LTL','SL','CapATL', 'OL', 'OATL', 'NatATL', 'RBATL', 'RABATL'])
+    Logic=st.selectbox('Select your logic',['LOGIC1','LOGIC2','...'])
     st.write(f"    ")
     st.write(f"    ")
     formula=st.text_input('Write your formula',' ')
@@ -739,52 +740,13 @@ def display_MS(page):
     start_time = None
     if st.button('Next : To Model Checking'):
       start_time = time.time()
-      if Logic == 'ATL':
-        from verification.ATL import ATL
-        result = ATL.model_checking(formula, filename)
-        del ATL
-        st.write(result['res'])
-        st.write(result['initial_state'])
-      elif Logic == 'CapATL':
-        from verification.CapATL import CapATL
-        result = CapATL.model_checking(formula, filename)
-        del CapATL
-        st.write(result)
-        # st.write(result['initial_state'])
-      elif Logic == 'ATLF':
-        from verification.ATLF import ATLF
-        result  = ATLF.model_checking(formula, filename)
-        del ATLF
-        st.write(result['res'])
-        st.write(result['initial_state'])
-      elif Logic == 'OL':
-        from verification.OL import OL
-        result  = OL.model_checking(formula, filename)
-        del OL
-        st.write(result['res'])
-      elif Logic == 'OATL':
-        from verification.OATL import OATL
-        result  = OATL.model_checking(formula, filename)
-        del OATL
-        st.write(result['res'])
-        st.write(result['initial_state'])
-      elif Logic == 'RBATL':
-        from verification.RBATL import RBATL
-        result  = RBATL.model_checking(formula, filename)
-        del RBATL
-        st.write(result['res'])
-        st.write(result['initial_state'])
-      elif Logic == 'RABATL':
-        from verification.RABATL import RABATL
-        result  = RABATL.model_checking(formula, filename)
-        del RABATL
-        st.write(result['res'])
-        st.write(result['initial_state'])
-      elif Logic == 'NatATL':
-        from verification.NatATL import process_data
-        result = process_data(filename, formula)
-        del process_data
-        st.write(result)
+      if Logic == 'LOGIC1':
+        pass # call the verification component for LOGIC1 passing the formula and model
+      elif Logic == 'LOGIC2':
+        pass # call the verification component for LOGIC2 passing the formula and model
+      if Logic == '...':
+        pass # call the verification component for ... passing the formula and model
+
       elapsed_time = time.time() - start_time
       st.write("Execution time:", format_time(elapsed_time))
       start_time = None
@@ -795,18 +757,6 @@ def display_MS(page):
       (st.session_state.info_model).append([Logic,formula])
       st.session_state.cmpt_model=7
       #st.experimental_rerun()
-  else:
-      xml = upload_xml_file_handler()
-      # Clement part to produce xml
-      #      xml --> cgs
-      #          --> formula
-      cgs,formula = mapAttackGraphToCGS(xml)
-      if st.button('Next : To Model Checking'):
-        from verification.ATL import ATL
-        result = ATL.model_checking(formula, cgs)
-        del ATL
-        st.write(result['res'])
-        st.write(result['initial_state'])
 
 
 def D_agent():
